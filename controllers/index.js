@@ -23,8 +23,7 @@ router.get('/login', function(req, res){
 router.get('/auth/vk',
     passport.authenticate('vkontakte'),
     function(req, res){
-        // The request will be redirected to VK for authentication, so this
-        // function will not be called.
+
     });
 
 router.get('/auth/vk/callback',
