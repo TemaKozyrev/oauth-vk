@@ -52,14 +52,17 @@ passport.use(new VKontakteStrategy(
         vk.setToken(accessToken);
 
         vk.request('friends.get', {'user_id' : profile.id, 'count': 5, 'fields': ['nickname']}, function(_o) {
-            profile.friends = []
-            _o.response.items.forEach(function (elem) {
-                profile.friends.push(elem.first_name + ' ' + elem.last_name)
+            vk.request('photos.get', {'owner_id' : profile.id , 'album_id': 'profile', 'count': 1}, function (p) {
+                profile.friends = []
+                profile.img = p.response.items[0]
+                _o.response.items.forEach(function (elem) {
+                    profile.friends.push({firstName: elem.first_name, lastName: elem.last_name})
+                })
+                process.nextTick(function () {
+                    console.log(profile.img);
+                    return done(null, profile);
+                });
             })
-            process.nextTick(function () {
-                console.log(profile.friends);
-                return done(null, profile);
-            });
         });
 
     }
